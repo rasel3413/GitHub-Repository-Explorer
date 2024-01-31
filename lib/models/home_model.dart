@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:repository_explorer/constants/strings.dart';
@@ -56,7 +57,9 @@ class HomeModel extends ChangeNotifier {
       _searchResults.addAll(repositories);
       _currentPage++;
     } catch (e) {
-      print('Error during search: $e');
+      if (kDebugMode) {
+        print('Error during search: $e');
+      }
       // Handle error as needed
     } finally {
       _isLoading = false;
