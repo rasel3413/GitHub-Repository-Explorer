@@ -8,6 +8,7 @@ class GitHubApiService {
   Future<List<dynamic>> searchRepositories(String keyword, int page,String sortOrder) async {
     final response = await http.get(
       Uri.parse( '$baseUrl/search/repositories?q=$keyword&page=$page&per_page=$perPage&sort=$sortOrder'),
+       headers: {'Accept': 'application/vnd.github+json'},
     );
 
     if (response.statusCode == 200) {

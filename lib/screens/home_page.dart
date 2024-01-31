@@ -1,188 +1,156 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:repository_explorer/models/home_model.dart';
 
 import '../constants/strings.dart';
-import '../services/github_api.dart';
-import 'package:intl/intl.dart';
-
 import 'repository_details_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final List<Map<String, dynamic>> _searchResults = [];
-  int _currentPage = 1;
-  bool _isLoading = false;
-  String keyword = "";
-  final DateFormat _dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-  String sortOrder = "stars";
-  final TextEditingController _searchingController = TextEditingController();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _performSearch();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      ///Appbar
       appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
         title: Text(
           AppStrings.appName,
-          style: GoogleFonts.openSans(),
+          style: GoogleFonts.openSans(color: Colors.white),
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchingController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your text',
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              keyword = _searchingController.text;
-                            });
-                            _performSearch();
-                          },
-                          icon: Icon(Icons.search)),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
+
+      
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          DropdownButtonHideUnderline(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: DropdownButton<String>(
-                value: sortOrder,
-                items: [
-                  'best match',
-                  'stars',
-                  'forks',
-                  'help-wanted-issues',
-                  'updated'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    sortOrder = newValue!;
-                  });
-                  _performSearch();
-                },
-              ),
-            ),
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                if (_isLoading)
-                  Center(
-                    child: CircularProgressIndicator(),
+
+            ///Sorting options 
+            Align(
+              alignment: Alignment.topRight,
+              child: DropdownButtonHideUnderline(
+                child: Container(
+                  alignment: Alignment.topRight,
+                  width: 150,
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey),
                   ),
-                NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (!_isLoading &&
-                        scrollInfo.metrics.pixels ==
-                            scrollInfo.metrics.maxScrollExtent) {
-                      // Reached the bottom of the list
-                      _performSearch();
-                      return true;
-                    }
-                    return false;
-                  },
-                  child: ListView.builder(
-                    itemCount: _searchResults.length,
-                    itemBuilder: (context, index) {
-                      final repo = _searchResults[index];
-                      return ListTile(
-                        title: Text(repo['full_name']),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Stars: ${repo['stargazers_count']}'),
-                            Text('Owner: ${repo['owner']['login']}'),
-                            Text(
-                                'Last Updated: ${_formatDateTime(repo['updated_at'])}'),
-                          ],
+                  child: DropdownButton<String>(
+                    value: Provider.of<HomeModel>(context).sortOrder,
+                    items: ['best match', 'stars', 'updated']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                          ),
                         ),
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(repo['owner']['avatar_url']),
-                        ),
-                        onTap: () {
-                          _navigateToRepositoryDetails(repo);
-                        },
                       );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      Provider.of<HomeModel>(context, listen: false)
+                          .updateSortOrder(newValue!);
                     },
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+
+
+            Expanded(
+              child: Stack(
+                children: [
+
+                  ///Checking is loading for showing progress bar
+                  if (Provider.of<HomeModel>(context,listen: false).isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+
+                    ///Checking if the list reached to bottom
+                  NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        Provider.of<HomeModel>(context, listen: false)
+                            .performSearch(false);
+
+                        return true;
+                      }
+                      return false;
+                    },
+                  ///Building the Listtile of information of github repo
+                    child: Consumer<HomeModel>(
+                      builder: (context, homeModel, child) {
+                        return ListView.builder(
+                          itemCount: homeModel.searchResults.length,
+                          itemBuilder: (context, index) {
+                            final repo = homeModel.searchResults[index];
+                            return Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withAlpha(40),
+                                shape: BoxShape.rectangle,
+                                border: Border.all(color: Colors.black38),
+                              ),
+                              child: ListTile(
+                                title: Text(repo['full_name']),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Stars: ${repo['stargazers_count']}',
+                                      style: GoogleFonts.openSans(),
+                                    ),
+                                    Text('Owner: ${repo['owner']['login']}',
+                                        style: GoogleFonts.openSans()),
+                                    Text(
+                                        'Last Updated: ${homeModel.formatDateTime(repo['pushed_at'])}',
+                                        style: GoogleFonts.openSans()),
+                                  ],
+                                ),
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(repo['owner']['avatar_url']),
+                                ),
+                                onTap: () {
+                                  _navigateToRepositoryDetails(context, repo);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  String _formatDateTime(String timestamp) {
-    final DateTime dateTime = DateTime.parse(timestamp);
-    return _dateFormat.format(dateTime);
-  }
-
-  void _performSearch() async {
-    setState(() {
-      _isLoading = true;
-      _searchResults.clear(); 
-    });
-
-   
-    final results = await GitHubApiService()
-        .searchRepositories(keyword, _currentPage, sortOrder);
-
-    final List<Map<String, dynamic>> repositories =
-        List.castFrom<dynamic, Map<String, dynamic>>(results);
-
-    setState(() {
-      _searchResults.addAll(repositories);
-      _currentPage++;
-      _isLoading = false;
-    });
-  }
-
-  void _navigateToRepositoryDetails(Map<String, dynamic> repo) {
+///Navigations to details page
+  void _navigateToRepositoryDetails(
+      BuildContext context, Map<String, dynamic> repo) {
     Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => RepositoryDetailsPage(repository:repo),
-    ),
-  ); }
+      context,
+      MaterialPageRoute(
+        builder: (context) => RepositoryDetailsPage(repository: repo),
+      ),
+    );
+  }
 }

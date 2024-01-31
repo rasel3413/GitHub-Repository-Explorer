@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class RepositoryDetailsPage extends StatelessWidget {
@@ -10,9 +11,15 @@ class RepositoryDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(repository['full_name']),
+       appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
+        title: Text(
+          repository['full_name'],
+          style: GoogleFonts.openSans(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
+     
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -25,20 +32,20 @@ class RepositoryDetailsPage extends StatelessWidget {
                 radius: 50,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Owner: ${repository['owner']['login']}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Description: ${repository['description'] ?? 'N/A'}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Last Updated: ${_formatDateTime(repository['updated_at'])}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             // Add more details as needed
           ],
