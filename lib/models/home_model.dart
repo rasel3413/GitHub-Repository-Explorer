@@ -26,20 +26,22 @@ class HomeModel extends ChangeNotifier {
 
   void updateKeyword(String newKeyword) {
     _keyword = newKeyword;
+    _currentPage = 1;
     performSearch(false);
     notifyListeners();
   }
 
   void updateSortOrder(String newSortOrder) {
     _sortOrder = newSortOrder;
+     _currentPage = 1;
     performSearch(true);
     notifyListeners();
   }
 
   Future<void> performSearch(bool clear) async {
-     if (_isLoading) {
-    return;
-  }
+    if (_isLoading) {
+      return;
+    }
     try {
       if (clear) _searchResults.clear();
       notifyListeners();
@@ -63,8 +65,9 @@ class HomeModel extends ChangeNotifier {
   }
 
   String formatDateTime(String timestamp) {
-    final DateFormat dateFormat = DateFormat('MMMM dd, yyyy hh:mm a');
-    final DateTime dateTime = DateTime.parse(timestamp);
-    return dateFormat.format(dateTime);
-  }
+  final DateFormat dateFormat = DateFormat('MMMM dd, yyyy hh:mm a', 'en_US');
+  final DateTime dateTime = DateTime.parse(timestamp);
+  return dateFormat.format(dateTime.toLocal());
+}
+
 }

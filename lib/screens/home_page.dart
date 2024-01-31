@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:repository_explorer/models/home_model.dart';
 
@@ -7,12 +8,11 @@ import '../constants/strings.dart';
 import 'repository_details_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
+ final NumberFormat formatter = NumberFormat.compact();
+   HomePage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       ///Appbar
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
@@ -23,7 +23,6 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
 
-      
       body: SafeArea(
         child: Column(
           children: [
@@ -31,54 +30,70 @@ class HomePage extends StatelessWidget {
               height: 10,
             ),
 
-            ///Sorting options 
-            Align(
-              alignment: Alignment.topRight,
-              child: DropdownButtonHideUnderline(
-                child: Container(
-                  alignment: Alignment.topRight,
-                  width: 150,
+            ///Sorting options
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey),
                   ),
-                  child: DropdownButton<String>(
-                    value: Provider.of<HomeModel>(context).sortOrder,
-                    items: ['best match', 'stars', 'updated']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: GoogleFonts.openSans(
-                            fontSize: 16,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      Provider.of<HomeModel>(context, listen: false)
-                          .updateSortOrder(newValue!);
-                    },
+                  child: Row(
+                    children: [
+                      Text("Keyword# ",style: GoogleFonts.openSans()),
+                      Text(AppStrings.keyWord,style: GoogleFonts.openSans(fontWeight: FontWeight.bold),)
+                    ],
+                  )
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: DropdownButtonHideUnderline(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 150,
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: DropdownButton<String>(
+                        value: Provider.of<HomeModel>(context).sortOrder,
+                        items: ["best match", "stars", "updated"]
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: GoogleFonts.openSans(
+                                fontSize: 16,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          Provider.of<HomeModel>(context, listen: false)
+                              .updateSortOrder(newValue!);
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-
-
 
             Expanded(
               child: Stack(
                 children: [
-
                   ///Checking is loading for showing progress bar
-                  if (Provider.of<HomeModel>(context,listen: false).isLoading)
+                  if (Provider.of<HomeModel>(context, listen: false).isLoading)
                     const Center(
                       child: CircularProgressIndicator(),
                     ),
 
-                    ///Checking if the list reached to bottom
+                  ///Checking if the list reached to bottom
                   NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollInfo) {
                       if (scrollInfo.metrics.pixels ==
@@ -90,7 +105,8 @@ class HomePage extends StatelessWidget {
                       }
                       return false;
                     },
-                  ///Building the Listtile of information of github repo
+
+                    ///Building the Listtile of information of github repo
                     child: Consumer<HomeModel>(
                       builder: (context, homeModel, child) {
                         return ListView.builder(
@@ -103,21 +119,22 @@ class HomePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.grey.withAlpha(40),
                                 shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: Colors.black38),
                               ),
                               child: ListTile(
-                                title: Text(repo['full_name']),
+                                title: Text(repo['full_name'],style: GoogleFonts.openSans(color: Colors.blue,fontWeight: FontWeight.bold),),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Stars: ${repo['stargazers_count']}',
+                                      'Stars: ${formatter.format(repo['stargazers_count'])}',
                                       style: GoogleFonts.openSans(),
                                     ),
                                     Text('Owner: ${repo['owner']['login']}',
                                         style: GoogleFonts.openSans()),
                                     Text(
-                                        'Last Updated: ${homeModel.formatDateTime(repo['pushed_at'])}',
+                                        'Last Updated: ${homeModel.formatDateTime(repo['updated_at'])}',
                                         style: GoogleFonts.openSans()),
                                   ],
                                 ),
@@ -143,7 +160,8 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-///Navigations to details page
+
+  ///Navigations to details page
   void _navigateToRepositoryDetails(
       BuildContext context, Map<String, dynamic> repo) {
     Navigator.push(
