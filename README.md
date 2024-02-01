@@ -65,7 +65,10 @@ The project uses the following dependencies:
 </p>
 
 
-https://github.com/rasel3413/GitHub-Repository-Explorer/assets/50762184/a2e1956e-874f-4a3d-9192-90ffb3c3f7ca
+
+https://github.com/rasel3413/GitHub-Repository-Explorer/assets/50762184/06eae23c-4461-4afa-a7aa-d95d535f2c4f
+
+
 
 ## Futurescope
 
