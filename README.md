@@ -67,7 +67,7 @@ The project uses the following dependencies:
 
 https://github.com/rasel3413/GitHub-Repository-Explorer/assets/50762184/a2e1956e-874f-4a3d-9192-90ffb3c3f7ca
 
-## Future Scope
+## Futurescope
 
 The GitHub Repository Explorer project has a solid foundation, and there are several potential enhancements and features that could be explored in the future. Some of the potential areas for future development include:
 
