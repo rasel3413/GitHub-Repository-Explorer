@@ -8,7 +8,7 @@ class GitHubApiService {
   static const int perPage = 10;
 
   Future<List<dynamic>> searchRepositories(String keyword, int page, String sortOrder) async {
-    // Checkinh if cached data is available
+    // Checking if cached data is available
     final cachedData = await _getCachedData(keyword, page, sortOrder);
     if (cachedData != null) {
       return cachedData;
@@ -31,13 +31,15 @@ class GitHubApiService {
       throw Exception('Failed to load repositories');
     }
   }
-
+///saving data using shared preference 
   Future<void> _cacheData(String keyword, int page, String sortOrder, List<dynamic> data) async {
     final prefs = await SharedPreferences.getInstance();
     final key = _generateCacheKey(keyword, page, sortOrder);
     prefs.setString(key, json.encode(data));
   }
 
+
+///Getting cache data
  Future<List<dynamic>?> _getCachedData(String keyword, int page, String sortOrder) async {
   try {
     final prefs = await SharedPreferences.getInstance();
@@ -64,7 +66,7 @@ class GitHubApiService {
   return null;
 }
 
-
+///Key for searching in offline 
   String _generateCacheKey(String keyword, int page, String sortOrder) {
     return '$keyword:$page:$sortOrder';
   }

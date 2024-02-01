@@ -19,6 +19,9 @@ class RepositoryDetailsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+
+
+      ///Showing repo details
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -42,6 +45,8 @@ class RepositoryDetailsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+
+              ///Descripions and Owner info
               Text(
                 'Owner: ${repository['owner']['login']}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

@@ -27,12 +27,16 @@ class HomeModel extends ChangeNotifier {
     await performSearch(true);
   }
 
+  ///Update using key word for future work 
+
   void updateKeyword(String newKeyword) {
     _keyword = newKeyword;
     _currentPage = 1;
     performSearch(false);
     notifyListeners();
   }
+
+  ///Sorting the list 
 
   void updateSortOrder(String newSortOrder) {
     _sortOrder = newSortOrder;
