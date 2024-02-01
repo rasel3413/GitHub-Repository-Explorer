@@ -7,10 +7,10 @@ GitHub Repository Explorer is a Flutter application that allows you to explore G
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
-- [Screenshots](#screenshots)
 - [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
+- [Screenshots](#screenshots)
+- [Futurescope](#futurescope)
+
 
 ## Overview
 
@@ -43,6 +43,16 @@ To run GitHub Repository Explorer on your local machine, follow these steps:
     ```bash
    flutter run
 
+## Dependencies
+
+The project uses the following dependencies:
+
+- **google_fonts** (version ^6.1.0)
+- **http** (version ^1.2.0)
+- **intl** (version ^0.19.0)
+- **provider** (version ^6.1.1)
+- **shared_preferences** (version ^2.2.2)
+- **connectivity_plus** (version ^5.0.2)
 
 ## Screenshots
 <p align="center">
@@ -57,6 +67,20 @@ To run GitHub Repository Explorer on your local machine, follow these steps:
 
 https://github.com/rasel3413/GitHub-Repository-Explorer/assets/50762184/a2e1956e-874f-4a3d-9192-90ffb3c3f7ca
 
+## Future Scope
+
+The GitHub Repository Explorer project has a solid foundation, and there are several potential enhancements and features that could be explored in the future. Some of the potential areas for future development include:
+
+1. **User Authentication:** Implement user authentication to allow users to access personalized features such as saving favorite repositories or managing their search history.
+
+2. **Advanced Sorting Options:** Introduce more sorting options based on different criteria, providing users with greater flexibility in organizing search results.
+
+3. **Detailed Repository Information:** Enhance the repository details page to display additional information such as contributors, issues, and pull requests.
+
+4. **User Feedback and Analytics:** Implement a system for collecting user feedback and analytics to gain insights into user behavior and preferences, enabling continuous improvement.
+
+
+These are just a few ideas, and the project can evolve based on user feedback and emerging trends in mobile app development.
 
 ## Getting Started
 
