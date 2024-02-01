@@ -51,7 +51,7 @@ class GitHubApiService {
       if (sortOrder == 'stars') {
         results.sort((a, b) => b['stargazers_count'].compareTo(a['stargazers_count']));
       } else if (sortOrder == 'updated') {
-        results.sort((a, b) => DateTime.parse(b['updated_at']).compareTo(DateTime.parse(a['updated_at'])));
+        results.sort((a, b) => DateTime.parse(b['pushed_at']).compareTo(DateTime.parse(a['pushed_at'])));
       }
 
       return results;

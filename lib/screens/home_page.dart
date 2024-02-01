@@ -134,7 +134,7 @@ class HomePage extends StatelessWidget {
                                     Text('Owner: ${repo['owner']['login']}',
                                         style: GoogleFonts.openSans()),
                                     Text(
-                                        'Last Updated: ${homeModel.formatDateTime(repo['updated_at'])}',
+                                        'Last Updated: ${homeModel.formatDateTime(repo['pushed_at'])}',
                                         style: GoogleFonts.openSans()),
                                   ],
                                 ),
