@@ -45,6 +45,14 @@ To run GitHub Repository Explorer on your local machine, follow these steps:
 
 
 ## Screenshots
+<p align="center">
+    <img src="https://github.com/rasel3413/JUBloodBank/blob/master/images/splashscreen.jpeg" alt="Image 3" width="200">
+   <img src="https://github.com/rasel3413/JUBloodBank/blob/master/images/HomePage.jpeg" alt="Image 2" width="200">
+  <img src="https://github.com/rasel3413/JUBloodBank/blob/master/images/Donor%20List.jpeg" alt="Image 1" width="200">
+
+  <img src="https://github.com/rasel3413/JUBloodBank/blob/master/images/ProfilePage.jpeg" alt="Image 3" width="200">
+
+</p>
 ## Getting Started
 
 This project is a starting point for a Flutter application.
